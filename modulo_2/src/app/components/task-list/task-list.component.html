@@ -1,0 +1,56 @@
+<div class="app-dashboard">
+  <header class="app-header">
+    <h1 class="main-title">Priority To-Do Board</h1>
+    <p class="subtitle">Organiza tus tareas y vota para priorizar lo más importante</p>
+  </header>
+
+  <main class="app-content">
+    <!-- Panel Izquierdo: Formulario (Componente Hijo) -->
+    <section class="form-section">
+      <div class="section-title-wrapper">
+        <h2 class="section-title">Nueva Tarea</h2>
+      </div>
+      <app-task-form (taskCreated)="onTaskCreated($event)"></app-task-form>
+    </section>
+
+    <!-- Panel Derecho: Lista de Tareas -->
+    <section class="list-section">
+      <div class="section-title-wrapper">
+        <h2 class="section-title">Lista de Tareas</h2>
+      </div>
+
+      <div class="task-grid">
+        <div *ngIf="(tasks$ | async)?.length === 0" class="empty-state">
+          <p>No hay tareas pendientes. ¡Crea una nueva tarea a la izquierda!</p>
+        </div>
+
+        <div *ngFor="let task of (tasks$ | async)" class="task-card">
+          <div class="task-info">
+            <span class="task-category">{{ task.category }}</span>
+            <h3 class="task-name">{{ task.name }}</h3>
+          </div>
+
+          <div class="task-actions">
+            <!-- Sección de Votos (Redux) -->
+            <div class="vote-control">
+              <button (click)="onUpvote(task.id)" class="btn-vote btn-up" title="Votar a favor">
+                ▲
+              </button>
+              <span class="vote-counter" [class.positive]="task.votes > 0" [class.negative]="task.votes < 0">
+                {{ task.votes }}
+              </span>
+              <button (click)="onDownvote(task.id)" class="btn-vote btn-down" title="Votar en contra">
+                ▼
+              </button>
+            </div>
+
+            <!-- Botón de Borrar (Redux) -->
+            <button (click)="onDelete(task.id)" class="btn-delete" title="Eliminar tarea">
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
