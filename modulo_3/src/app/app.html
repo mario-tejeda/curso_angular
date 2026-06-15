@@ -1,0 +1,43 @@
+<nav class="navbar">
+  <div class="nav-brand">
+    <span class="brand-logo">📦</span>
+    <span class="brand-name" routerLink="/products">Inventario Angular</span>
+  </div>
+  
+  <ul class="nav-links">
+    <li>
+      <a routerLink="/products" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        Catálogo
+      </a>
+    </li>
+    <li>
+      <a routerLink="/products/add" routerLinkActive="active" class="btn-protected">
+        <span class="lock-icon" *ngIf="!(authService.loggedIn$ | async)">🔒</span>
+        <span class="lock-icon unlock" *ngIf="authService.loggedIn$ | async">🔓</span>
+        Administración
+      </a>
+    </li>
+  </ul>
+  
+  <div class="nav-auth">
+    <button *ngIf="!(authService.loggedIn$ | async)" routerLink="/login" class="btn-login">
+      Iniciar Sesión
+    </button>
+    <div *ngIf="authService.loggedIn$ | async" class="user-menu">
+      <span class="user-badge">Admin</span>
+      <button (click)="onLogout()" class="btn-logout">
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="container animate-fade-in">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>© 2026 Catálogo Modular S.A. - Desarrollado en Angular con NgRx, Dexie y Express</p>
+</footer>
