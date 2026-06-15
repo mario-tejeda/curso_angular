@@ -1,0 +1,78 @@
+<div class="cart-container glass-panel">
+  <!-- Cart Header -->
+  <div class="cart-header">
+    <h2>Tu Pedido 🛒</h2>
+    <div [@badgePulse]="badgeState" class="badge">
+      {{ cartItems.length }}
+    </div>
+  </div>
+
+  <!-- Cart Items List -->
+  <div class="cart-body">
+    @if (cartItems.length === 0) {
+      <p class="empty-msg">El carrito está vacío. Haz clic en los marcadores del mapa y añade comida para empezar.</p>
+    } @else {
+      <div class="cart-items-wrapper">
+        @for (item of cartItems; track $index) {
+          <div class="cart-item" [@itemFadeSlide]>
+            <div class="item-info">
+              <span class="item-name">{{ item.name }}</span>
+              <span class="restaurant-name">{{ item.restaurantName }}</span>
+            </div>
+            <div class="item-actions">
+              <span class="item-price">${{ item.price.toFixed(2) }}</span>
+              <button
+                class="remove-btn"
+                [appClickTracker]="'remove-item-' + item.id"
+                [attr.data-tracking-tag]="'remove-item-tag-' + item.id"
+                (click)="removeItem.emit($index)">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Cart Footer & Checkout -->
+      <div class="cart-footer">
+        <div class="total-row">
+          <span>Total:</span>
+          <span class="total-price">${{ cartTotal.toFixed(2) }}</span>
+        </div>
+        <button
+          class="checkout-btn"
+          [appClickTracker]="'checkout-action'"
+          [attr.data-tracking-tag]="'checkout-click-tag'"
+          (click)="onCheckout()">
+          Confirmar Pedido 🚀
+        </button>
+      </div>
+    }
+
+    <!-- Checkout Success Notification -->
+    @if (checkoutSuccess) {
+      <div class="success-banner" [@slideDown]>
+        ¡Pedido procesado con éxito! Tu comida está en camino. 🛵💨
+      </div>
+    }
+  </div>
+
+  <!-- Reactive Click Tracking Statistics Dashboard -->
+  <div class="stats-section">
+    <h3>Estadísticas de Clics (Reactivo Redux) 📊</h3>
+    <p class="stats-desc">Registrado de forma reactiva a través del store de Redux utilizando la directiva <code>appClickTracker</code>.</p>
+    
+    @if (clickStats.length === 0) {
+      <p class="empty-stats">Aún no se han registrado clics. Interactúa con el mapa o el carrito para ver estadísticas.</p>
+    } @else {
+      <div class="stats-grid">
+        @for (stat of clickStats; track stat.tag) {
+          <div class="stat-card">
+            <span class="stat-tag">{{ stat.tag }}</span>
+            <span class="stat-count">{{ stat.count }}</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

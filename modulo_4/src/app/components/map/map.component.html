@@ -1,0 +1,69 @@
+<div class="map-wrapper">
+  <!-- Mapbox Map Canvas -->
+  <mgl-map
+    [style]="mapStyle"
+    [zoom]="zoom"
+    [center]="center"
+    [accessToken]="accessToken"
+    class="map-container">
+    
+    <!-- Map Markers (visible when map initializes) -->
+    @for (restaurant of restaurants; track restaurant.id) {
+      <mgl-marker [lngLat]="restaurant.coordinates">
+        <button 
+          class="map-marker-pin"
+          (click)="selectRestaurant(restaurant)">
+          📍
+        </button>
+      </mgl-marker>
+    }
+  </mgl-map>
+
+  <!-- Modern Floating Glass Details Card (Visible in DOM when restaurant is selected) -->
+  @if (selectedRestaurant) {
+    <div class="restaurant-details-card glass-panel">
+      <div class="card-header">
+        <h3 class="popup-title">{{ selectedRestaurant.name }}</h3>
+        <button class="close-card-btn" [appClickTracker]="'close-details'" (click)="selectedRestaurant = null">✕</button>
+      </div>
+      <p class="popup-cuisine"><strong>Categoría:</strong> {{ selectedRestaurant.cuisine }}</p>
+      
+      <div class="popup-menu">
+        <h4 class="menu-header">Menú del Día:</h4>
+        <ul class="menu-list">
+          @for (dish of selectedRestaurant.menu; track dish.id) {
+            <li class="menu-item">
+              <div class="dish-details">
+                <span class="dish-name">{{ dish.name }}</span>
+                <span class="dish-price">${{ dish.price.toFixed(2) }}</span>
+              </div>
+              <button
+                class="add-item-btn"
+                [appClickTracker]="'add-dish-' + dish.id"
+                [attr.data-tracking-tag]="'add-dish-tag-' + dish.id"
+                (click)="addDish(selectedRestaurant, dish)">
+                Añadir +
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Accessible Shortcuts Panel (Crucial for Cypress tests and screen readers) -->
+<div class="accessibility-shortcuts">
+  <span class="shortcuts-title">Accesos rápidos (o si el mapa no carga):</span>
+  <div class="shortcuts-buttons">
+    @for (restaurant of restaurants; track restaurant.id) {
+      <button 
+        class="map-marker-btn"
+        [appClickTracker]="'marker-' + restaurant.id"
+        [attr.data-tracking-tag]="'marker-click-' + restaurant.id"
+        (click)="selectRestaurant(restaurant)">
+        📍 {{ restaurant.name }} ({{ restaurant.cuisine }})
+      </button>
+    }
+  </div>
+</div>

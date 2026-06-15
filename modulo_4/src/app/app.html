@@ -1,0 +1,46 @@
+<div class="app-container">
+  <!-- Header Section -->
+  <header class="app-header glass-panel">
+    <div class="header-logo-title" [appClickTracker]="'logo-header'">
+      <span class="app-logo">🍔📍</span>
+      <div class="header-text">
+        <h1>Foodie Map</h1>
+        <p class="subtitle">Simulador de Pedidos & Analíticas con Angular y Redux</p>
+      </div>
+    </div>
+    
+    <div class="header-info">
+      <span class="info-badge">Mapbox GL</span>
+      <span class="info-badge">NgRx Store</span>
+      <span class="info-badge">Angular Animations</span>
+    </div>
+  </header>
+
+  <!-- Interactive Grid Area -->
+  <main class="app-grid">
+    <!-- Map Section -->
+    <section class="grid-column map-section glass-panel">
+      <div class="section-header">
+        <h2>Mapa de Restaurantes Cercanos 🗺️</h2>
+        <p class="section-desc">Haz clic en los pines para explorar el menú y realizar pedidos.</p>
+      </div>
+      <app-map (itemAdded)="onItemAdded($event)"></app-map>
+    </section>
+
+    <!-- Cart and Stats Section -->
+    <section class="grid-column cart-section">
+      <app-cart
+        [cartItems]="(cartItems$ | async) || []"
+        [cartTotal]="(cartTotal$ | async) || 0"
+        [clickCounts]="(clickCounts$ | async) || {}"
+        (removeItem)="onRemoveItem($event)"
+        (checkoutCart)="onCheckout()">
+      </app-cart>
+    </section>
+  </main>
+
+  <!-- Footer Section -->
+  <footer class="app-footer">
+    <p>Desarrollado para el Módulo 4 del Curso de Angular © 2026</p>
+  </footer>
+</div>
